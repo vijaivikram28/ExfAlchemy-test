@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Loan Application</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFEAD8;
+            --secondary-color: #E8988A;
+            --accent-color-1: #9B177E;
+            --accent-color-2: #2A1458;
+            --text-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background-image: url('https://images.unsplash.com/photo-1579621970795-87facc2f976d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color-2);
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color-1);
+            box-shadow: 0 0 0 3px rgba(155, 23, 126, 0.2);
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--accent-color-1);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--accent-color-2);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                margin: 1rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="loanApplicationForm">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required 
+                       pattern="^[A-Za-z\s]+$" 
+                       placeholder="Enter your full name (letters only)">
+                <div id="nameError" class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" required>
+                <div id="dobError" class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="income">Annual Income ($)</label>
+                <input type="number" id="income" name="income" 
+                       min="0" step="1000" required 
+                       placeholder="Enter your annual income">
+            </div>
+
+            <div class="form-group">
+                <label for="loanAmount">Loan Amount ($)</label>
+                <input type="number" id="loanAmount" name="loanAmount" 
+                       min="1000" step="1000" required 
+                       placeholder="Enter desired loan amount">
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Loan Application</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('loanApplicationForm');
+            const nameInput = document.getElementById('name');
+            const dobInput = document.getElementById('dob');
+            const nameError = document.getElementById('nameError');
+            const dobError = document.getElementById('dobError');
+
+            // Name validation
+            nameInput.addEventListener('input', () => {
+                const nameRegex = /^[A-Za-z\s]+$/;
+                if (!nameRegex.test(nameInput.value)) {
+                    nameError.textContent = 'Name must contain only letters';
+                    nameInput.setCustomValidity('Invalid name');
+                } else {
+                    nameError.textContent = '';
+                    nameInput.setCustomValidity('');
+                }
+            });
+
+            // Date of Birth validation
+            dobInput.addEventListener('change', () => {
+                const selectedDate = new Date(dobInput.value);
+                const currentDate = new Date();
+
+                if (selectedDate > currentDate) {
+                    dobError.textContent = 'Date of Birth cannot be in the future';
+                    dobInput.setCustomValidity('Invalid date');
+                } else {
+                    dobError.textContent = '';
+                    dobInput.setCustomValidity('');
+                }
+            });
+
+            // Form submission handling
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Basic form validation
+                if (form.checkValidity()) {
+                    alert('Loan Application Submitted Successfully!');
+                    // Here you would typically send the form data to a backend service
+                } else {
+                    form.reportValidity();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
